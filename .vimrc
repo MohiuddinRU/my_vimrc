@@ -21,7 +21,35 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
 Plug 'cjuniet/clang-format.vim'
 
+Plug 'OmniSharp/omnisharp-vim'
+Plug 'dense-analysis/ale'
+
+
+Plug 'othree/javascript-libraries-syntax.vim'
+"vue support
+Plug 'neoclide/coc-vetur'
+Plug 'posva/vim-vue'
+
+Plug 'josa42/coc-sh'
+Plug 'tpope/vim-surround'
+Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
+Plug 'hdima/python-syntax'
+
+
 call plug#end()
+
+
+" Use the stdio version of OmniSharp-roslyn - this is the default
+let g:OmniSharp_server_stdio = 1
+
+let g:ale_linters = {
+\ 'cs': ['OmniSharp']
+\}
+
+let g:ale_disable_lsp = 1
+
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 set number
 syntax on 
@@ -33,17 +61,19 @@ set completeopt-=preview
 set nowrap
 set showcmd
 
-autocmd vimEnter *.py map <F6>  :w <CR> : !clear; python3 %; <CR>
-autocmd vimEnter *.js map<F7> :w <CR> : !clear; node %; <CR>
-autocmd vimEnter *.php map <F8> :w <CR> :!clear ; php % <CR>
+autocmd vimEnter *.js map <F7>  :w <CR> : !clear; node %; <CR>
+autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
 autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
 autocmd vimEnter *.java map <F10>  :w <CR> : !clear; java %; <CR>
 
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
-nmap <F2> :NERDTreeToggle<CR>
-nmap <leader>f :ClangFormat<CR>
+nmap <F2> : NERDTreeToggle <CR>
+nmap <leader>f : ClangFormat <CR>
+nmap <leader>n : NERDTreeToggle <CR>
+nmap <C-n> : NERDTreeToggle <CR> 
 
+iabbr sout System.out.println("
 
 let g:UltiSnipsExpandTrigger="<C-l>"
 let g:vim_jsx_pretty_highlight_close_tag = 1
