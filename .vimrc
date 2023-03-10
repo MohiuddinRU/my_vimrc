@@ -2,6 +2,8 @@ set visualbell
 set t_vb=
 let mapleader = "," 
 
+let g:loaded_matchparen = 1
+
 set nocompatible
 filetype off
 
@@ -32,14 +34,47 @@ Plug 'posva/vim-vue'
 
 Plug 'josa42/coc-sh'
 Plug 'tpope/vim-surround'
+"python coc
 Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
 Plug 'hdima/python-syntax'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'mileszs/ack.vim'
+Plug 'puremourning/vimspector'
+Plug 'yaegassy/coc-blade', {'do': 'yarn install --frozen-lockfile'}
+Plug 'yaegassy/coc-intelephense', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html'
+Plug 'sheerun/vim-polyglot'
+
+"dart
+Plug 'dart-lang/dart-vim-plugin'
+
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'natebosch/vim-lsc'
+Plug 'natebosch/vim-lsc-dart'
 
 
 call plug#end()
 
+let g:lsc_auto_map = v:true
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+nnoremap <key> *``
+nnoremap <anotherkey> #``
+
+au FileType php let b:coc_root_patterns = ['.git', '.env', 'composer.json', 'artisan']
+autocmd BufEnter * lcd %:p:h
+
+"searching
+"let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " Use the stdio version of OmniSharp-roslyn - this is the default
+"
+let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 let g:OmniSharp_server_stdio = 1
 
 let g:ale_linters = {
@@ -63,8 +98,8 @@ set showcmd
 
 autocmd vimEnter *.js map <F7>  :w <CR> : !clear; node %; <CR>
 autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
-autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
-autocmd vimEnter *.java map <F10>  :w <CR> : !clear; java %; <CR>
+autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; /usr/bin/g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
+autocmd vimEnter *.sh map <F10>  :w <CR> : !clear; ./%;<CR>
 
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
@@ -280,3 +315,30 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+
+runtime macros/matchit.vim
+
+let g:user_emmet_settings = {
+\  'variables': {'lang': 'ja'},
+\  'html': {
+\    'default_attributes': {
+\      'option': {'value': v:null},
+\      'textarea': {'id': v:null, 'name': v:null, 'cols': 10, 'rows': 10},
+\    },
+\    'snippets': {
+\      'html:5': "<!DOCTYPE html>\n"
+\              ."<html lang=\"${lang}\">\n"
+\              ."<head>\n"
+\              ."\t<meta charset=\"${charset}\">\n"
+\              ."\t<title></title>\n"
+\              ."\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+\              ."</head>\n"
+\              ."<body>\n\t${child}|\n</body>\n"
+\              ."</html>",
+\    },
+\  },
+\}
+
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
