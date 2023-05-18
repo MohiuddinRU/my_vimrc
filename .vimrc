@@ -7,6 +7,17 @@ let g:loaded_matchparen = 1
 set nocompatible
 filetype off
 
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -53,7 +64,10 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
+Plug 'vim-scripts/LargeFile'
 
+Plug 'puremourning/vimspector'
+Plug 'vim-vdebug/vdebug'
 
 call plug#end()
 
@@ -66,8 +80,15 @@ endif
 nnoremap <key> *``
 nnoremap <anotherkey> #``
 
+" For local replace
+nnoremap gr gd[{V%::s/<C-R>///gc<left><left><left>
+
+" For global replace
+nnoremap gR gD:%s/<C-R>///gc<left><left><left>
+
 au FileType php let b:coc_root_patterns = ['.git', '.env', 'composer.json', 'artisan']
-autocmd BufEnter * lcd %:p:h
+"goes to the current directory
+"autocmd BufEnter * lcd %:p:h
 
 "searching
 "let g:ackprg = 'ag --nogroup --nocolor --column'
@@ -88,6 +109,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 set number
 syntax on 
+set re=1
 filetype plugin indent on
 set tabstop=4
 set shiftwidth=4
