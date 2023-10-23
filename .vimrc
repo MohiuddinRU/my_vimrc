@@ -6,6 +6,10 @@ let g:loaded_matchparen = 1
 
 set nocompatible
 filetype off
+set filetype=unix
+syntax sync fromstart
+syntax sync minlines=10000
+set autochdir
 
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -17,6 +21,8 @@ endif
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
+
+autocmd BufEnter * lcd %:p:h
 
 call plug#begin('~/.vim/plugged')
 
@@ -36,6 +42,8 @@ Plug 'cjuniet/clang-format.vim'
 
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'dense-analysis/ale'
+Plug 'mechatroner/rainbow_csv'
+
 
 
 Plug 'othree/javascript-libraries-syntax.vim'
@@ -45,6 +53,7 @@ Plug 'posva/vim-vue'
 
 Plug 'josa42/coc-sh'
 Plug 'tpope/vim-surround'
+
 "python coc
 Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
 Plug 'hdima/python-syntax'
@@ -54,20 +63,16 @@ Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'puremourning/vimspector'
 Plug 'yaegassy/coc-blade', {'do': 'yarn install --frozen-lockfile'}
-Plug 'yaegassy/coc-intelephense', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-html'
 Plug 'sheerun/vim-polyglot'
 
-"dart
-Plug 'dart-lang/dart-vim-plugin'
-
-Plug 'dart-lang/dart-vim-plugin'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
-Plug 'vim-scripts/LargeFile'
 
 Plug 'puremourning/vimspector'
-Plug 'vim-vdebug/vdebug'
+Plug 'preservim/nerdcommenter'
+
+Plug 'prisma/vim-prisma'
 
 call plug#end()
 
@@ -111,6 +116,8 @@ set number
 syntax on 
 set re=1
 filetype plugin indent on
+filetype plugin on
+
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -121,14 +128,13 @@ set showcmd
 autocmd vimEnter *.js map <F7>  :w <CR> : !clear; node %; <CR>
 autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
 autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; /usr/bin/g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
-autocmd vimEnter *.sh map <F10>  :w <CR> : !clear; ./%;<CR>
+autocmd vimEnter *.java map <F10>  :w <CR> : !clear; !javac %; :!java -cp %:p:h %:t:r<CR>
 
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
-nmap <F2> : NERDTreeToggle <CR>
 nmap <leader>f : ClangFormat <CR>
 nmap <leader>n : NERDTreeToggle <CR>
-nmap <C-n> : NERDTreeToggle <CR> 
+nmap <C-n> : NERDTreeFind <CR> 
 
 iabbr sout System.out.println("
 
@@ -364,3 +370,20 @@ let g:user_emmet_settings = {
 
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+syntax on
+set re=2
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+nnoremap <Leader>dd :call vimspector#Launch()<CR>
+nnoremap <Leader>dr :call vimspector#Reset()<CR>
+nnoremap <Leader>dc :call vimspector#Continue()<CR>
+
+nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+
+nmap <Leader>dk <Plug>VimspectorRestart
+nmap <Leader>dh <Plug>VimspectorStepOut
+nmap <Leader>dl <Plug>VimspectorStepInto
+nmap <Leader>dj <Plug>VimspectorStepOver
