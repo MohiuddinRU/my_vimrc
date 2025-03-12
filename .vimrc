@@ -2,6 +2,7 @@ set visualbell
 set t_vb=
 let mapleader = "," 
 
+
 let g:loaded_matchparen = 1
 
 set nocompatible
@@ -9,7 +10,8 @@ filetype off
 set filetype=unix
 syntax sync fromstart
 syntax sync minlines=10000
-set autochdir
+
+set gp=git\ grep\ -n
 
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -22,10 +24,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
-autocmd BufEnter * lcd %:p:h
-
 call plug#begin('~/.vim/plugged')
 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'moll/vim-node'
 Plug 'raimondi/delimitmate'
@@ -43,8 +44,7 @@ Plug 'cjuniet/clang-format.vim'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'dense-analysis/ale'
 Plug 'mechatroner/rainbow_csv'
-
-
+Plug 'tpope/vim-ragtag'
 
 Plug 'othree/javascript-libraries-syntax.vim'
 "vue support
@@ -60,8 +60,9 @@ Plug 'hdima/python-syntax'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'dbakker/vim-projectroot'
 Plug 'mileszs/ack.vim'
-Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
 Plug 'yaegassy/coc-blade', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-html'
 Plug 'sheerun/vim-polyglot'
@@ -73,14 +74,17 @@ Plug 'puremourning/vimspector'
 Plug 'preservim/nerdcommenter'
 
 Plug 'prisma/vim-prisma'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
+Plug 'kristijanhusak/vim-dadbod-completion'
 
 call plug#end()
 
 let g:lsc_auto_map = v:true
 
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
+let g:ackprg = 'ag --nogroup --nocolor --column'
 
 nnoremap <key> *``
 nnoremap <anotherkey> #``
@@ -92,11 +96,9 @@ nnoremap gr gd[{V%::s/<C-R>///gc<left><left><left>
 nnoremap gR gD:%s/<C-R>///gc<left><left><left>
 
 au FileType php let b:coc_root_patterns = ['.git', '.env', 'composer.json', 'artisan']
-"goes to the current directory
-"autocmd BufEnter * lcd %:p:h
 
 "searching
-"let g:ackprg = 'ag --nogroup --nocolor --column'
+let g:ackprg = 'ag --nogroup --nocolor --column'
 
 " Use the stdio version of OmniSharp-roslyn - this is the default
 "
@@ -125,16 +127,18 @@ set completeopt-=preview
 set nowrap
 set showcmd
 
-autocmd vimEnter *.js map <F7>  :w <CR> : !clear; node %; <CR>
+autocmd vimEnter *.js map <F6>  :w <CR> : !clear; node %; <CR>
+autocmd vimEnter *.sh map <F7>  :w <CR> : !clear; bash %; <CR>
 autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
 autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; /usr/bin/g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
+"autocmd vimEnter *.go map <F9> :w <CR> :!clear ;  time go run % <CR>
 autocmd vimEnter *.java map <F10>  :w <CR> : !clear; !javac %; :!java -cp %:p:h %:t:r<CR>
 
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
-nmap <leader>f : ClangFormat <CR>
-nmap <leader>n : NERDTreeToggle <CR>
-nmap <C-n> : NERDTreeFind <CR> 
+nnoremap <leader>f : ClangFormat <CR>
+nnoremap <leader>t : NERDTreeToggle <CR>
+nnoremap <leader>n : NERDTreeFind <CR>
 
 iabbr sout System.out.println("
 
@@ -387,3 +391,13 @@ nmap <Leader>dk <Plug>VimspectorRestart
 nmap <Leader>dh <Plug>VimspectorStepOut
 nmap <Leader>dl <Plug>VimspectorStepInto
 nmap <Leader>dj <Plug>VimspectorStepOver
+
+
+" " Initialize configuration dictionary
+let g:fzf_vim = {}
+
+" Set FZF to use the directory where Vim was started
+let g:fzf_command_prefix = 'Fzf'  " Optional: use a prefix for commands
+let g:fzf_vim.preview_window = ['down,90%', 'ctrl-/']
+nnoremap <leader>f :FZF <CR>
+nnoremap <leader>g :FzfAg <CR>
