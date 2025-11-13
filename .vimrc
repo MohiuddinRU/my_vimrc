@@ -127,18 +127,76 @@ set completeopt-=preview
 set nowrap
 set showcmd
 
-autocmd vimEnter *.js map <F6>  :w <CR> : !clear; node %; <CR>
-autocmd vimEnter *.sh map <F7>  :w <CR> : !clear; bash %; <CR>
-autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
-autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; /usr/bin/g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
-"autocmd vimEnter *.go map <F9> :w <CR> :!clear ;  time go run % <CR>
-autocmd vimEnter *.java map <F10>  :w <CR> : !clear; !javac %; :!java -cp %:p:h %:t:r<CR>
+"autocmd vimEnter *.js map <F6>  :w <CR> : !clear; node %; <CR>
+"autocmd vimEnter *.sh map <F7>  :w <CR> : !clear; bash %; <CR>
+"autocmd vimEnter *.py map <F8>  :w <CR> : !clear; python3 %; <CR>
+"autocmd vimEnter *.cpp map <F9> :w <CR> :!clear ; /usr/bin/g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
+""autocmd vimEnter *.go map <F9> :w <CR> :!clear ;  time go run % <CR>
+"autocmd vimEnter *.java map <F10>  :w <CR> : !clear; !javac %; :!java -cp %:p:h %:t:r<CR>
+
+function! RunFile()
+  " Save the current file first
+  write
+
+  " Get file info
+  let l:ext = expand('%:e')      " file extension
+  let l:file = shellescape(expand('%'))       " full filename (escaped)
+  let l:basename = expand('%:t:r') " file name without extension
+  let l:dir = shellescape(expand('%:p:h'))    " directory path (escaped)
+
+  " Choose command based on extension
+  if l:ext ==# 'py'
+    execute '!clear && time python3 ' . l:file
+  elseif l:ext ==# 'js'
+    execute '!clear && time node ' . l:file
+  elseif l:ext ==# 'sh'
+    execute '!clear && time bash ' . l:file
+  elseif l:ext ==# 'cpp'
+    execute '!clear && g++ --std=c++17 ' . l:file . ' -o /tmp/a.out && time /tmp/a.out && rm /tmp/a.out'
+  elseif l:ext ==# 'c'
+    execute '!clear && gcc ' . l:file . ' -o /tmp/a.out && time /tmp/a.out && rm /tmp/a.out'
+  elseif l:ext ==# 'java'
+    execute '!clear && javac ' . l:file . ' && time java -cp ' . l:dir . ' ' . l:basename
+  elseif l:ext ==# 'go'
+    execute '!clear && time go run ' . l:file
+  elseif l:ext ==# 'rb'
+    execute '!clear && time ruby ' . l:file
+  elseif l:ext ==# 'pl'
+    execute '!clear && time perl ' . l:file
+  elseif l:ext ==# 'php'
+    execute '!clear && time php ' . l:file
+  elseif l:ext ==# 'lua'
+    execute '!clear && time lua ' . l:file
+  elseif l:ext ==# 'rs'
+    execute '!clear && rustc ' . l:file . ' -o /tmp/rust_out && time /tmp/rust_out && rm /tmp/rust_out'
+  elseif l:ext ==# 'ts'
+    execute '!clear && time ts-node ' . l:file
+  elseif l:ext ==# 'dart'
+    execute '!clear && time dart ' . l:file
+  elseif l:ext ==# 'swift'
+    execute '!clear && time swift ' . l:file
+  elseif l:ext ==# 'kt'
+    execute '!clear && kotlinc ' . l:file . ' -include-runtime -d /tmp/kotlin_out.jar && time java -jar /tmp/kotlin_out.jar && rm /tmp/kotlin_out.jar'
+  elseif l:ext ==# 'scala'
+    execute '!clear && time scala ' . l:file
+  elseif l:ext ==# 'r' || l:ext ==# 'R'
+    execute '!clear && time Rscript ' . l:file
+  else
+    echo "❌ Unsupported file type: " . l:ext
+  endif
+endfunction
+
+" Map F9 to run the current file
+nnoremap <F9> :call RunFile()<CR>
+
+" Map F9 to run the current file
+nnoremap <F9> :call RunFile()<CR>
+
 
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
-nnoremap <leader>f : ClangFormat <CR>
-nnoremap <leader>t : NERDTreeToggle <CR>
-nnoremap <leader>n : NERDTreeFind <CR>
+nnoremap <leader>n : NERDTreeToggle <CR>
+nnoremap ff : NERDTreeFind <CR>
 
 iabbr sout System.out.println("
 
@@ -378,7 +436,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 syntax on
 set re=2
 
-let g:vimspector_enable_mappings = 'HUMAN'
+"let g:vimspector_enable_mappings = 'HUMAN'
 
 nnoremap <Leader>dd :call vimspector#Launch()<CR>
 nnoremap <Leader>dr :call vimspector#Reset()<CR>
@@ -400,4 +458,23 @@ let g:fzf_vim = {}
 let g:fzf_command_prefix = 'Fzf'  " Optional: use a prefix for commands
 let g:fzf_vim.preview_window = ['down,90%', 'ctrl-/']
 nnoremap <leader>f :FZF <CR>
-nnoremap <leader>g :FzfAg <CR>
+
+command! -bang -nargs=* CustomFzfAg call fzf#vim#ag(<q-args>,  '--exact --ignore "*.po" --ignore "*.pot" --ignore "*.md" --ignore "*.jpg" --ignore "*.png" --ignore "*.rst"', <bang>0)
+nnoremap <leader>g :CustomFzfAg<CR>
+nnoremap <leader>rf :%!ruff format<CR>
+
+" Open quickfix list
+nnoremap <leader>co :copen<CR>
+
+" Close quickfix list
+nnoremap <leader>cc :cclose<CR>
+
+" Navigate to next item in quickfix list
+nnoremap <C-j> :cnext<CR>
+
+" Navigate to previous item in quickfix list
+nnoremap <C-k> :cprev<CR>
+
+" Automatically open quickfix list after :vimgrep, :make, etc.
+autocmd QuickFixCmdPost [^l]* copen
+
