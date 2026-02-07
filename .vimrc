@@ -59,8 +59,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'mileszs/ack.vim'
-"Plug 'puremourning/vimspector'
-Plug 'yaegassy/coc-blade', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-html'
 Plug 'sheerun/vim-polyglot'
 
