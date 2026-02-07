@@ -472,3 +472,15 @@ nnoremap <C-k> :cprev<CR>
 
 " Automatically open quickfix list after :vimgrep, :make, etc.
 autocmd QuickFixCmdPost [^l]* copen
+" Search word under cursor with ag
+nnoremap <leader>o :OdooGrep <C-R><C-W><CR>
+" nnoremap <leader>g :OdooGrep<Space>
+"
+command! -bang OdooGrepLive
+      \ call fzf#vim#grep(
+      \   'ag --js --python --xml --nogroup --column --color ""',
+      \   1,
+      \   fzf#vim#with_preview({'options': '--exact --disabled --bind "change:reload:ag --js --python --xml --nogroup --column --color {q}"'}),
+      \   <bang>0
+      \ )
+nnoremap <leader>g :OdooGrepLive<CR>
