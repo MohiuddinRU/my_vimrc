@@ -454,8 +454,8 @@ let g:fzf_command_prefix = 'Fzf'  " Optional: use a prefix for commands
 let g:fzf_vim.preview_window = ['down,90%', 'ctrl-/']
 nnoremap <leader>f :FZF <CR>
 
-command! -bang -nargs=* CustomFzfAg call fzf#vim#ag(<q-args>, '--ignore "*.po" --ignore "*.pot" --ignore "*.md" --ignore "*.jpg" --ignore "*.png" --ignore "*.rst"', fzf#vim#with_preview({'options': '--exact'}), <bang>0)
-nnoremap <leader>g :CustomFzfAg<CR>
+command! -bang -nargs=* OdooGrep call fzf#vim#grep('ag --js --python --xml --nogroup --column --color '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--exact'}), <bang>0)
+
 nnoremap <leader>rf :%!ruff format<CR>
 
 " Open quickfix list
