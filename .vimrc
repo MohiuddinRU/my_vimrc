@@ -47,9 +47,6 @@ Plug 'mechatroner/rainbow_csv'
 Plug 'tpope/vim-ragtag'
 
 Plug 'othree/javascript-libraries-syntax.vim'
-"vue support
-Plug 'neoclide/coc-vetur'
-Plug 'posva/vim-vue'
 
 Plug 'josa42/coc-sh'
 Plug 'tpope/vim-surround'
