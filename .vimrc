@@ -448,15 +448,20 @@ nmap <Leader>dj <Plug>VimspectorStepOver
 
 " " Initialize configuration dictionary
 let g:fzf_vim = {}
+let g:fzf_layout = { 'down': '100%' }
 
 " Set FZF to use the directory where Vim was started
 let g:fzf_command_prefix = 'Fzf'  " Optional: use a prefix for commands
-let g:fzf_vim.preview_window = ['down,90%', 'ctrl-/']
+let g:fzf_vim.preview_window = ['down,99%', 'ctrl-/']
+let $FZF_DEFAULT_OPTS="--preview 'bat --color=always --style=numbers {}'"
+let $BAT_THEME = 'gruvbox-dark'
+
 nnoremap <leader>f :FZF <CR>
 
-command! -bang -nargs=* OdooGrep call fzf#vim#grep('ag --js --python --xml --nogroup --column --color '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--exact'}), <bang>0)
+command! -bang -nargs=* OdooGrep call fzf#vim#grep('ag --js --python --xml --nogroup --column --color '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--exact', 'preview': 'bat --color=always --style=numbers --highlight-line {2} {1}'}), <bang>0)
 
-nnoremap <leader>rf :%!ruff format<CR>
+" nnoremap <leader>rf :%!ruff format %<CR>
+nnoremap <leader>rf :w<CR>:silent !ruff format %<CR>:e!<CR>
 
 " Open quickfix list
 nnoremap <leader>co :copen<CR>
@@ -480,7 +485,12 @@ command! -bang OdooGrepLive
       \ call fzf#vim#grep(
       \   'ag --js --python --xml --nogroup --column --color ""',
       \   1,
-      \   fzf#vim#with_preview({'options': '--exact --disabled --bind "change:reload:ag --js --python --xml --nogroup --column --color {q}"'}),
+      \   fzf#vim#with_preview({
+      \     'options': '--exact --disabled --bind "change:reload:ag --js --python --xml --nogroup --column --color {q}"',
+      \     'preview': 'bat --color=always --style=numbers --highlight-line {2} {1}'
+      \   }),
       \   <bang>0
       \ )
 nnoremap <leader>g :OdooGrepLive<CR>
+
+nnoremap <leader>rf :!ruff format %<CR>:e<CR>
