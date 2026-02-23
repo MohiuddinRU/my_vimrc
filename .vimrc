@@ -494,3 +494,5 @@ command! -bang OdooGrepLive
 nnoremap <leader>g :OdooGrepLive<CR>
 
 nnoremap <leader>rf :!ruff format %<CR>:e<CR>
+
+nnoremap <leader>ev :e $MYVIMRC<CR>
