@@ -43,7 +43,6 @@ Plug 'cjuniet/clang-format.vim'
 
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'dense-analysis/ale'
-Plug 'mechatroner/rainbow_csv'
 Plug 'tpope/vim-ragtag'
 
 Plug 'othree/javascript-libraries-syntax.vim'
@@ -74,6 +73,8 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
+Plug 'mechatroner/rainbow_csv'
+
 
 call plug#end()
 
