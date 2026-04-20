@@ -42,7 +42,6 @@ Plug 'morhetz/gruvbox'
 Plug 'cjuniet/clang-format.vim'
 
 Plug 'OmniSharp/omnisharp-vim'
-Plug 'dense-analysis/ale'
 Plug 'tpope/vim-ragtag'
 
 Plug 'othree/javascript-libraries-syntax.vim'
