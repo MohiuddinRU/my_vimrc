@@ -493,6 +493,17 @@ command! -bang OdooGrepLive
       \ )
 nnoremap <leader>g :OdooGrepLive<CR>
 
-nnoremap <leader>rf :!ruff format %<CR>:e<CR>
+nnoremap <leader>rf :call RuffFormat()<CR>
+
+function! RuffFormat()
+  let filename = expand('%')
+  call system('ruff format ' . shellescape(filename) . ' 2>/dev/null')
+  edit!
+endfunction
+
+augroup python_ruff_format
+  autocmd!
+  autocmd BufWritePost *.py silent call system('ruff format ' . shellescape(expand('%')) . ' 2>/dev/null') | edit!
+augroup END
 
 nnoremap <leader>ev :e $MYVIMRC<CR>
