@@ -141,41 +141,41 @@ function! RunFile()
 
   " Choose command based on extension
   if l:ext ==# 'py'
-    execute '!clear && time python3 ' . l:file
+    execute '!clear && /usr/bin/time -p python3 ' . l:file
   elseif l:ext ==# 'js'
-    execute '!clear && time node ' . l:file
+    execute '!clear && /usr/bin/time -p node ' . l:file
   elseif l:ext ==# 'sh'
-    execute '!clear && time bash ' . l:file
+    execute '!clear && /usr/bin/time -p bash ' . l:file
   elseif l:ext ==# 'cpp'
-    execute '!clear && g++ --std=c++17 ' . l:file . ' -o /tmp/a.out && time /tmp/a.out && rm /tmp/a.out'
+    execute '!clear && g++ --std=c++17 ' . l:file . ' -o /tmp/a.out && /usr/bin/time -p /tmp/a.out && rm /tmp/a.out'
   elseif l:ext ==# 'c'
-    execute '!clear && gcc ' . l:file . ' -o /tmp/a.out && time /tmp/a.out && rm /tmp/a.out'
+    execute '!clear && gcc ' . l:file . ' -o /tmp/a.out && /usr/bin/time -p /tmp/a.out && rm /tmp/a.out'
   elseif l:ext ==# 'java'
-    execute '!clear && javac ' . l:file . ' && time java -cp ' . l:dir . ' ' . l:basename
+    execute '!clear && javac ' . l:file . ' && /usr/bin/time -p java -cp ' . l:dir . ' ' . l:basename
   elseif l:ext ==# 'go'
-    execute '!clear && time go run ' . l:file
+    execute '!clear && /usr/bin/time -p go run ' . l:file
   elseif l:ext ==# 'rb'
-    execute '!clear && time ruby ' . l:file
+    execute '!clear && /usr/bin/time -p ruby ' . l:file
   elseif l:ext ==# 'pl'
-    execute '!clear && time perl ' . l:file
+    execute '!clear && /usr/bin/time -p perl ' . l:file
   elseif l:ext ==# 'php'
-    execute '!clear && time php ' . l:file
+    execute '!clear && /usr/bin/time -p php ' . l:file
   elseif l:ext ==# 'lua'
-    execute '!clear && time lua ' . l:file
+    execute '!clear && /usr/bin/time -p lua ' . l:file
   elseif l:ext ==# 'rs'
-    execute '!clear && rustc ' . l:file . ' -o /tmp/rust_out && time /tmp/rust_out && rm /tmp/rust_out'
+    execute '!clear && rustc ' . l:file . ' -o /tmp/rust_out && /usr/bin/time -p /tmp/rust_out && rm /tmp/rust_out'
   elseif l:ext ==# 'ts'
-    execute '!clear && time ts-node ' . l:file
+    execute '!clear && /usr/bin/time -p ts-node ' . l:file
   elseif l:ext ==# 'dart'
-    execute '!clear && time dart ' . l:file
+    execute '!clear && /usr/bin/time -p dart ' . l:file
   elseif l:ext ==# 'swift'
-    execute '!clear && time swift ' . l:file
+    execute '!clear && /usr/bin/time -p swift ' . l:file
   elseif l:ext ==# 'kt'
-    execute '!clear && kotlinc ' . l:file . ' -include-runtime -d /tmp/kotlin_out.jar && time java -jar /tmp/kotlin_out.jar && rm /tmp/kotlin_out.jar'
+    execute '!clear && kotlinc ' . l:file . ' -include-runtime -d /tmp/kotlin_out.jar && /usr/bin/time -p java -jar /tmp/kotlin_out.jar && rm /tmp/kotlin_out.jar'
   elseif l:ext ==# 'scala'
-    execute '!clear && time scala ' . l:file
+    execute '!clear && /usr/bin/time -p scala ' . l:file
   elseif l:ext ==# 'r' || l:ext ==# 'R'
-    execute '!clear && time Rscript ' . l:file
+    execute '!clear && /usr/bin/time -p Rscript ' . l:file
   else
     echo "❌ Unsupported file type: " . l:ext
   endif
