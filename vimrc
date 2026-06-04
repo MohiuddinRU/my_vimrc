@@ -506,4 +506,18 @@ augroup python_ruff_format
   autocmd BufWritePost *.py silent call system('ruff format ' . shellescape(expand('%')) . ' 2>/dev/null') | edit!
 augroup END
 
+" Java: format on save via coc-java (requires `:CocInstall coc-java`)
+augroup java_coc_format
+  autocmd!
+  autocmd BufWritePre *.java silent call CocAction('format')
+augroup END
+nnoremap <leader>jf :call CocAction('format')<CR>
+
+" Run `mvn test` from the project root (uses vim-projectroot)
+function! MvnTest()
+  let l:root = projectroot#guess()
+  execute '!cd ' . shellescape(l:root) . ' && mvn test'
+endfunction
+nnoremap <leader>mt :call MvnTest()<CR>
+
 nnoremap <leader>ev :e $MYVIMRC<CR>
