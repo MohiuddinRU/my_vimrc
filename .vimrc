@@ -24,6 +24,13 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
+" Use uv-managed Python 3.14 for +python3 plugins (vimspector)
+let s:uvpy = expand('~/.local/share/uv/python/cpython-3.14-macos-aarch64-none')
+if isdirectory(s:uvpy)
+  let &pythonthreehome = s:uvpy
+  let &pythonthreedll  = s:uvpy . '/lib/libpython3.14.dylib'
+endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
