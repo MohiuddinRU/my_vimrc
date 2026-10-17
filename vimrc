@@ -55,8 +55,6 @@ Plug 'othree/javascript-libraries-syntax.vim'
 
 Plug 'tpope/vim-surround'
 
-"python coc
-Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
 Plug 'hdima/python-syntax'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -250,6 +248,7 @@ let g:coc_global_extensions = [
       \ 'coc-yaml',
       \ 'coc-xml',
       \ 'coc-sh',
+      \ 'coc-pyright',
       \ ]
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
