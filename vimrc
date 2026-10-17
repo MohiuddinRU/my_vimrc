@@ -53,7 +53,6 @@ Plug 'tpope/vim-ragtag'
 
 Plug 'othree/javascript-libraries-syntax.vim'
 
-Plug 'josa42/coc-sh'
 Plug 'tpope/vim-surround'
 
 "python coc
@@ -64,7 +63,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'mileszs/ack.vim'
-Plug 'neoclide/coc-html'
 Plug 'sheerun/vim-polyglot'
 
 Plug 'natebosch/vim-lsc'
@@ -241,6 +239,19 @@ endif
 
 
 "-------------------------------------------------coc.nvim
+" Extensions coc installs automatically on startup if missing
+let g:coc_global_extensions = [
+      \ 'coc-clangd',
+      \ 'coc-java',
+      \ 'coc-tsserver',
+      \ 'coc-json',
+      \ 'coc-html',
+      \ 'coc-css',
+      \ 'coc-yaml',
+      \ 'coc-sh',
+      \ 'coc-phpls',
+      \ ]
+
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
 set encoding=utf-8
@@ -513,12 +524,18 @@ augroup python_ruff_format
   autocmd BufWritePost *.py silent call system('ruff format ' . shellescape(expand('%')) . ' 2>/dev/null') | edit!
 augroup END
 
-" Java: format on save via coc-java (requires `:CocInstall coc-java`)
+" Java: format on save via coc-java
 augroup java_coc_format
   autocmd!
   autocmd BufWritePre *.java silent call CocAction('format')
 augroup END
 nnoremap <leader>jf :call CocAction('format')<CR>
+
+" C/C++: format on save via coc-clangd (style from nearest .clang-format)
+augroup cpp_coc_format
+  autocmd!
+  autocmd BufWritePre *.c,*.h,*.cpp,*.hpp,*.cc,*.cxx silent call CocAction('format')
+augroup END
 
 " Run `mvn test` from the project root (uses vim-projectroot)
 function! MvnTest()
